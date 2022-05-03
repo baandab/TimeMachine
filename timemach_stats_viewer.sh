@@ -128,11 +128,14 @@ while getopts "klnpsr:?" OPTION; do
 	esac
 done
 
-VOLUMES=$(ls -d /Volumes/Backups\ of\ $MY_HOSTNAME* | grep -c Backups)
+# fixed to ignore if zero directories are found
 
-if [ "$VOLUMES" != "1" ]; then
+VOLUMES=$(ls -d /Volumes/Backups\ of\ $MY_HOSTNAME* 2>&1 | grep -v "No such" | grep -c Backups)
+
+if [ $VOLUMES -gt 1 ]; then
 	printf "$d - $MY_HOSTNAME - $NAME - WARNING: There are $VOLUMES folders named 'Backups of $MY_HOSTNAME*' in '/Volumes' \n"
 fi
+
 
 if [ "$LIST_STATUS" = "0" ]; then
 
